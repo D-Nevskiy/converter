@@ -1,0 +1,112 @@
+openapi: 3.0.2
+info:
+  title: 'Документация для проекта Converter'
+  version: 'v1.0'
+paths:
+  /api/rates/:
+    get:
+      operationId: listCurrencyConversions
+      description: "View-\u043A\u043B\u0430\u0441\u0441 \u043F\u0440\u0435\u0434\u043E\
+        \u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u0442\u043E\u0447\u043A\u0443\
+        \ \u0432\u0445\u043E\u0434\u0430.\n\u041E\u043D \u043F\u0430\u0440\u0441\u0438\
+        \u0442 \u0437\u0430\u043F\u0440\u043E\u0441, \u0432\u0430\u043B\u0438\u0434\
+        \u0438\u0440\u0443\u0435\u0442 \u0434\u0430\u043D\u043D\u044B\u0435\n\u0412\
+        \u043E\u0437\u0440\u0430\u0449\u0430\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\
+        \u044C\u0442\u0430\u0442 \u043A\u043E\u0D41\u043D\u0432\u0435\u0440\u0442\u0430\u0446\
+        \u0438\u0438 \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0438\u043B\u0438\
+        \ \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u043E\u0431 \u043E\
+        \u0448\u0438\u0431\u043A\u0435."
+      parameters:
+        - in: query
+          name: from
+          description: Код валюты, из которой конвертировать
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: to
+          description: Код валюты, в которую конвертировать
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: value
+          description: Количество для конвертации
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: number
+          description: 'Результат конвертации'
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+          description: 'Ошибка в запросе. Пример: {"error": "Требуются указание валют и количество: \"from\", \"to\" и \"value\""}'
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+          description: 'Неизвестный формат валюты. Пример: {"error": "Неизвестный формат валюты. Весь список найти можно по endpoint: api/currency-list/"}'
+        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+          description: 'Ошибка при запросе к сервису. Пример: {"error": "Ошибка при запросе к сервису"}'
+      tags:
+      - API Converter
+  /api/currency-list/:
+    get:
+      operationId: listCurrencys
+      description: "\u0414\u0436\u0435\u043D\u0435\u0440\u0438\u043A \u0434\u043B\u044F\
+        \ \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0441\u043F\u0438\
+        \u0441\u043A\u0430 \u0432\u0430\u043B\u044E\u0442 \u0438\u0437 \u0431\u0430\
+        \u0437\u044B \u0434\u0430\u043D\u043D\u044B\u0445.\n\u0412\u043E\u0437\u0432\
+        \u0440\u0430\u0449\u0430\u0435\u0442 \u0441\u043F\u0438\u0441\u043E\u043A\
+        \ \u0432\u0441\u0435\u0445 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\
+        \u0445 \u0432\u0430\u043B\u044E\u0442."
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Currency'
+          description: 'Список доступных валют'
+      tags:
+        - API Converter
+components:
+  schemas:
+    Currency:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 3
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - code
+      - name
