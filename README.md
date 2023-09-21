@@ -15,11 +15,11 @@ GET /api/currency-list/
 ### Запуск проекта в контейнере
 - Загрузка Docker-образа
 ```
-- docker pull dnevskiy/converter:0.0.1
+docker pull dnevskiy/converter:0.0.1
 ```
 - Запуск контейнера
 ```
-- docker run -p 8000:8000 dnevskiy/converter
+docker run -p 8000:8000 dnevskiy/converter
 ```
 ### API документация
 В файле schema.yaml находится документация API.
